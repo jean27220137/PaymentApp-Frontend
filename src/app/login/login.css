@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:host {
+  font-family: 'Poppins', sans-serif;
+  display: block;
+  background: linear-gradient(to top, #f4f5f9 0%, #fdfdfd 100%);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.main-container {
+  width: 100%;
+  max-width: 400px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.logo-container {
+  display: grid;
+  place-items: center;
+  margin-bottom: 1rem;
+}
+
+.header-text h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #181725;
+  margin: 0;
+}
+
+.header-text p {
+  color: #7C7C7C;
+  font-size: 0.95rem;
+  margin-top: 5px;
+  margin-bottom: 2rem;
+}
+
+.login-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: grid;
+  gap: 5px;
+}
+
+.input-group label {
+  color: #7C7C7C;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #E2E2E2;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  color: #181725;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input::placeholder {
+  color: #CACACA;
+}
+
+input:focus {
+  border-bottom-color: #53B175;
+}
+
+.suffix-icon {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.suffix-icon.check {
+  pointer-events: none;
+}
+
+
+.forgot-password {
+  text-align: right;
+  margin-top: -0.5rem; 
+}
+
+.forgot-password a {
+  color: #181725;
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+
+.btn-submit {
+  background-color: #53B175;
+  color: white;
+  border: none;
+  padding: 18px;
+  border-radius: 19px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+
+.btn-submit:hover {
+  background-color: #469e66;
+}
+
+.btn-submit:disabled {
+  background-color: #a5d4b6;
+  cursor: not-allowed;
+}
+
+
+.footer-link {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #181725;
+}
+
+.footer-link a {
+  color: #53B175;
+  text-decoration: none;
+}

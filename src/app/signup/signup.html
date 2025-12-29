@@ -1,0 +1,64 @@
+<div class="main-container">
+  
+  <div class="logo-container">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14.6 9.89998L17.5 7.49998C17.5 7.49998 19.1 8.89998 19.3 10.6" stroke="#53B175" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13.7 7.79999L15.6 5.29999C15.6 5.29999 17.5 6.09999 18.2 7.79999" stroke="#53B175" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M11.6 7.10001L12.6 3.90001C12.6 3.90001 14.6 4.10001 15.8 5.50001" stroke="#53B175" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M16.1297 10.8207C16.8926 12.0003 16.7909 13.5786 15.8078 14.5617L9.62648 20.743C7.62584 22.7437 4.54287 22.9037 2.37896 21.1274L7.54013 15.9663C8.19702 15.3094 8.19702 14.2445 7.54013 13.5876C6.88325 12.9307 5.81832 12.9307 5.16143 13.5876L3.02924 15.7198C0.849187 13.5042 1.09241 9.87053 3.59363 7.36931L9.77494 1.188C10.758 0.204918 12.3364 0.103233 13.516 0.866107L16.1297 10.8207Z" fill="#F3603F"/>
+    </svg>
+  </div>
+
+  <div class="header-text">
+    <h1>Sign Up</h1>
+    <p>Enter your credentials to continue</p>
+  </div>
+
+  <form (ngSubmit)="signup()" class="signup-form">
+    
+    <div class="input-group">
+      <label for="email">Email</label>
+      <div class="input-wrapper">
+        <input type="email" id="email" name="email" [(ngModel)]="user.email" placeholder="imshuvo97@gmail.com" required>
+        <span class="suffix-icon check" *ngIf="user.email.includes('@')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#53B175" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="pass">Password</label>
+      <div class="input-wrapper">
+        <input [type]="showPassword ? 'text' : 'password'" id="pass" name="password" [(ngModel)]="user.password" placeholder="••••••••" required>
+        <span class="suffix-icon eye" (click)="togglePasswordVisibility()">
+          <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C7C7C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C7C7C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </span>
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label>First Name</label>
+      <input type="text" name="firstname" [(ngModel)]="user.firstname" placeholder="Nombre">
+    </div>
+     <div class="input-group">
+      <label>Last Name</label>
+      <input type="text" name="lastname" [(ngModel)]="user.lastname" placeholder="Apellido">
+    </div>
+     <div class="input-group">
+      <label>Country</label>
+      <input type="text" name="country" [(ngModel)]="user.country" placeholder="Perú">
+    </div>
+
+    <div class="terms-text">
+      By continuing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="!user.email || !user.password">Sign Up</button>
+    
+    <div class="footer-link">
+      Already have an account? <a href="#">Singup</a>
+    </div>
+
+  </form>
+</div>
