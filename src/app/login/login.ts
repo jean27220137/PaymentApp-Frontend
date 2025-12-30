@@ -17,62 +17,39 @@ export class LoginComponent {
   showPassword = false;
   loading = false; 
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService, 
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      // Validamos 8 DIGITOS o Email
+      email: ['', [Validators.required, Validators.pattern(/^(\d{8,15}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/)]],
       password: ['', [Validators.required]]
     });
   }
 
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
-  }
+  togglePasswordVisibility() { this.showPassword = !this.showPassword; }
 
-  onSubmit(): void {
+  onSubmit() {
     if (this.loginForm.valid) {
       this.loading = true; 
+      // Enviamos como 'username' para que Java lo entienda
+      const loginData = {
+        username: this.loginForm.value.email, 
+        password: this.loginForm.value.password
+      };
 
-    
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (token) => {
-          Swal.fire({
-            title: '¡Bienvenido!',
-            text: 'Inicio de sesión correcto',
-            icon: 'success',
-            timer: 1500, 
-            showConfirmButton: false
-          }).then(() => {
-            this.router.navigate(['/dashboard']); 
-          });
+      this.authService.login(loginData).subscribe({
+        next: (res: any) => {
+          const tokenValue = res.token || res; 
+          localStorage.setItem('token', tokenValue);
+          Swal.fire({ title: '¡Bienvenido!', icon: 'success', timer: 1500, showConfirmButton: false })
+            .then(() => this.router.navigate(['/products'])); 
         },
         error: (err) => {
-        
-          console.error(err);
-          Swal.fire({
-            title: 'Error de acceso',
-            text: 'Correo o contraseña incorrectos',
-            icon: 'error',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Intentar de nuevo'
-          });
+          Swal.fire({ title: 'Error', text: 'Credenciales incorrectas', icon: 'error' });
           this.loading = false;
         }
       });
-
     } else {
-      
       this.loginForm.markAllAsTouched();
-      
-     
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atención',
-        text: 'Por favor completa todos los campos correctamente'
-      });
     }
   }
 }

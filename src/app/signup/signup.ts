@@ -1,70 +1,44 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AuthService } from '../services/auth';
-import { RegisterRequest } from '../models/register-request.model';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth'; 
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 })
 export class SignupComponent {
-  
-  user: RegisterRequest = {
-    email: '',
-    password: '',
-    firstname: '',
-    lastname: '',
-    country: ''
-  };
-
-  loading = false;
-  error = '';
+  signupForm: FormGroup;
   showPassword = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.signupForm = this.fb.group({
+      firstname: ['', [Validators.required, Validators.pattern('^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$')]],
+      lastname: ['', [Validators.required, Validators.pattern('^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$')]],
+      // Validamos 8 DIGITOS para teléfonos
+      username: ['', [Validators.required, Validators.pattern(/^(\d{8,15}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      country: ['Perú', Validators.required]
+    });
   }
 
-  signup() {
-    if (!this.user.email || !this.user.password) {
-      Swal.fire('Error', 'Por favor completa los campos obligatorios', 'warning');
-      return;
-    }
+  togglePasswordVisibility() { this.showPassword = !this.showPassword; }
 
-    this.loading = true;
-    
-    this.authService.register(this.user).subscribe({
-      next: (response: any) => {
-        Swal.fire({
-          title: '¡Registro Exitoso!',
-          text: 'Tu cuenta ha sido creada correctamente',
-          icon: 'success',
-          confirmButtonColor: '#53B175',
-          confirmButtonText: 'Ir al Dashboard'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigate(['/dashboard']);
-          }
-        });
-      },
-      error: (err: any) => {
-        console.error(err);
-        Swal.fire({
-          title: 'Error',
-          text: 'Hubo un problema al registrarse. Intenta nuevamente.',
-          icon: 'error',
-          confirmButtonColor: '#d33'
-        });
-        this.loading = false;
-      }
-    });
+  onSubmit() {
+    if (this.signupForm.valid) {
+      this.authService.register(this.signupForm.value).subscribe({
+        next: () => {
+          Swal.fire('¡Cuenta creada!', 'Ahora puedes iniciar sesión', 'success').then(() => this.router.navigate(['/login']));
+        },
+        error: (err) => Swal.fire('Error', 'No se pudo registrar.', 'error')
+      });
+    } else {
+      this.signupForm.markAllAsTouched();
+    }
   }
 }

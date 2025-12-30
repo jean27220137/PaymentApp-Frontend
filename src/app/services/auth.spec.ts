@@ -1,19 +1,39 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing'; // Importante para simular HTTP
-import { AuthService } from './auth'; // <--- CORREGIDO: Importamos AuthService
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { jwtDecode } from "jwt-decode"; // <--- IMPORTANTE: Importar esto
 
-describe('AuthService', () => {
-  let service: AuthService; // <--- CORREGIDO: Tipo AuthService
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // <--- Necesario porque tu servicio usa HttpClient
-      providers: [AuthService]
-    });
-    service = TestBed.inject(AuthService); // <--- CORREGIDO: Inyectamos AuthService
-  });
+  private apiUrl = 'http://localhost:8080/auth'; // Tu URL real
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+  constructor(private http: HttpClient) { }
+
+  login(credentials: any) {
+    return this.http.post(`${this.apiUrl}/login`, credentials);
+  }
+
+  // --- NUEVO MÉTODO: ¿Está vencido el token? ---
+  isTokenExpired(): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) return true; // Si no hay token, cuenta como vencido
+
+    try {
+      const decoded: any = jwtDecode(token);
+      const fechaExpiracion = decoded.exp * 1000; // Convertir a milisegundos
+      const ahora = Date.now();
+
+      // Si la fecha de expiración es MENOR a ahora, ya venció
+      return fechaExpiracion < ahora; 
+    } catch (error) {
+      return true; // Si el token está corrupto, cuenta como vencido
+    }
+  }
+
+  // Método para cerrar sesión limpio
+  logout() {
+    localStorage.removeItem('token');
+  }
+}
